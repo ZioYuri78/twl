@@ -1,0 +1,9 @@
+.clangd
+oauths.txt
+*.pdb
+*.dll
+*.lib
+*.exp
+*.ilk
+*.obj
+*.exe
