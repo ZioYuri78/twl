@@ -1,6 +1,10 @@
 @echo off
-setlocal enabledelayedexpansion
 
+if not exist "%~dp0obj\" mkdir "%~dp0obj\"
+if not exist "%~dp0lib\" mkdir "%~dp0lib\debug\"
+if not exist "%~dp0bin\" mkdir "%~dp0bin\debug\"
+
+setlocal enabledelayedexpansion
 set INCLUDES=.\include\
 set STD=c11
 set OBJ=.\obj\
