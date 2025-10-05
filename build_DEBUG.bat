@@ -1,14 +1,16 @@
 @echo off
 
-if not exist "%~dp0obj\" mkdir "%~dp0obj\"
-if not exist "%~dp0bin\" mkdir "%~dp0bin\debug\"
-
 setlocal
+set WD=%~dp0
+
+if not exist "%WD%obj\" mkdir "%WD%obj\"
+if not exist "%WD%bin\" mkdir "%WD%bin\debug\"
+
 set SOURCE=%1
 set LIBRARIES=%2
-set INCLUDES=.\include\
+set INCLUDES=%WD%include\
 set STD=c11
-set OBJ=.\obj\
-set BIN=.\bin\debug\
+set OBJ=%WD%obj\
+set BIN=%WD%bin\debug\
 
-cl /D_DEBUG /Fe%BIN% /Fo%OBJ% /std:%STD% /I%INCLUDES% /MDd /Zi %SOURCE% /link /LIBPATH:.\lib\ %LIBRARIES% 
+cl /D_DEBUG /Fe%BIN% /Fo%OBJ% /std:%STD% /I%INCLUDES% /MDd /Zi %SOURCE% /link /LIBPATH:%WD%lib\ %LIBRARIES% 
