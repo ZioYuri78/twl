@@ -877,8 +877,6 @@ BOOL TWLPContentClassificationLabels(const char *data, FTWLCCLabel *ccls) {
 
 BOOL TWLPEventSubscription(const char *data, FTWLEventSub *event_sub) {
 	const char *p = data;
-
-	//{"data":[{"id":"b14dbaea-7724-430f-9165-5047ccf4b5ec","status":"enabled","type":"channel.chat.message","version":"1","condition":{"broadcaster_user_id":"28352553","user_id":"28352553"},"created_at":"2025-09-10T14:04:03.755584259Z","transport":{"method":"websocket","session_id":"AgoQM0E8V6w9TLKh9PSpds9SkBIGY2VsbC1j","connected_at":"2025-09-10T14:04:03Z"},"cost":0}],"total":2,"max_total_cost":10,"total_cost":0}
 	
 	// {"data":[{"id":
 	p += 15;
