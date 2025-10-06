@@ -23,11 +23,14 @@ extern "C" {
 //            TWITCH LIBRARY API            //
 // ======================================== //
 
+	typedef struct FTWLSessionHandles {
+		HINTERNET hSession;
+		HINTERNET hConnection;
+	} FTWLSessionHandles;
+
 	typedef struct FTWLUserCredentials {
 		wchar_t client_id[100];						// Twitch app client ID
 		wchar_t oauth2_token[100];					// Twitch app OAuth token
-		HINTERNET hSession;							// HTTP session, internally set by the library
-		HINTERNET hConnection;						// HTTP connection, internally set by the library
 	} FTWLUserCredentials;
 
 // ========================= //

@@ -26,23 +26,18 @@ extern "C" {
 	/**
 	 * Connect to Twitch API server.
 	 * 
-	 * @param user_credentials 		Twitch client ID and OAuth token
-	 * 
 	 * @return 						TRUE if successful, FALSE otherwise
 	 *
 	 */
-	TWL_API BOOL TWLConnect(FTWLUserCredentials *user_credentials);
+	TWL_API BOOL TWLConnect();
 
 	/**
-	 * Reset the client id and the oauth token.
 	 * Shutdown the connection and the session.
-	 *
-	 * @param user_credentials 		Twitch client ID and OAuth token
 	 * 
 	 * @return 						TRUE if successful, FALSE otherwise
 	 *
 	 */
-	TWL_API BOOL TWLShutdown(FTWLUserCredentials *user_credentials);
+	TWL_API BOOL TWLShutdown();
 
 	/**
 	 * Set the current API user, call it before any function that you want to be

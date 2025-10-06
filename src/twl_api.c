@@ -20,7 +20,8 @@
 
 
 BOOL g_is_shutdown = FALSE;
-const FTWLUserCredentials *g_current_user = NULL;
+static FTWLSessionHandles g_session_handles = {};
+static FTWLUserCredentials g_current_user = {};
 
 BOOL DllMain(HINSTANCE hInstDLL, DWORD reason, LPVOID reserved) {
 
@@ -58,12 +59,12 @@ BOOL DllMain(HINSTANCE hInstDLL, DWORD reason, LPVOID reserved) {
 // ======================================== //
 //            TWITCH LIBRARY API            //
 // ======================================== //
-BOOL TWLConnect(FTWLUserCredentials *user_credentials) {
+BOOL TWLConnect() {
 
 	printf(YELLOW("Opening session..\n"));
 
-	user_credentials->hSession = WinHttpOpen(L"TWL_Session", WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
-	if(user_credentials->hSession == NULL) {
+	g_session_handles.hSession = WinHttpOpen(L"TWL_Session", WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+	if(g_session_handles.hSession == NULL) {
 		int error = GetLastError();
 		char buffer[512] = {};
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, error, 0, buffer, sizeof(buffer), 0);		
@@ -75,8 +76,8 @@ BOOL TWLConnect(FTWLUserCredentials *user_credentials) {
 	}
 
 	printf(YELLOW("Connecting to api.twitch.tv..\n"));
-	user_credentials->hConnection = WinHttpConnect(user_credentials->hSession, L"api.twitch.tv", INTERNET_DEFAULT_HTTPS_PORT, 0);
-	if(user_credentials->hConnection == NULL) {
+	g_session_handles.hConnection = WinHttpConnect(g_session_handles.hSession, L"api.twitch.tv", INTERNET_DEFAULT_HTTPS_PORT, 0);
+	if(g_session_handles.hConnection == NULL) {
 		int error = GetLastError();
 		char buffer[512] = {};
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, error, 0, buffer, sizeof(buffer), 0);		
@@ -87,20 +88,16 @@ BOOL TWLConnect(FTWLUserCredentials *user_credentials) {
 		return FALSE;
 	}
 
-	g_current_user = user_credentials;
 	printf(GREEN("Connection successfully enstablished!\n"));
 
 	return TRUE;
 }
 
 
-BOOL TWLShutdown(FTWLUserCredentials *user_credentials) {
-
-	wmemset(user_credentials->client_id, L'\0', ARRAYSIZE(user_credentials->client_id));
-	wmemset(user_credentials->oauth2_token, L'\0', ARRAYSIZE(user_credentials->oauth2_token));
+BOOL TWLShutdown() {
 
 	printf(YELLOW("Closing connection handle..\n"));
-	BOOL result_a = WinHttpCloseHandle(user_credentials->hConnection);
+	BOOL result_a = WinHttpCloseHandle(g_session_handles.hConnection);
 	if(result_a == FALSE) {
 		int error_id = GetLastError();
 		char buffer[512] = {};
@@ -111,7 +108,7 @@ BOOL TWLShutdown(FTWLUserCredentials *user_credentials) {
 	}
 
 	printf(YELLOW("Closing session handle..\n"));
-	BOOL result_b = WinHttpCloseHandle(user_credentials->hSession);
+	BOOL result_b = WinHttpCloseHandle(g_session_handles.hSession);
 	if(result_b == FALSE) {
 		int error_id = GetLastError();
 		char buffer[512] = {};
@@ -133,13 +130,9 @@ BOOL TWLShutdown(FTWLUserCredentials *user_credentials) {
 
 BOOL TWLSetCurrentUser(const FTWLUserCredentials *user_credentials) {
 
-	if(
-			user_credentials == NULL || 
-			user_credentials->hSession == NULL || 
-			user_credentials->hConnection == NULL
-	  ) return FALSE;
+	if(user_credentials == NULL ) return FALSE;
 
-	g_current_user = user_credentials;
+	g_current_user = *user_credentials;
 
 	return TRUE;
 }
@@ -6698,7 +6691,7 @@ HINTERNET TWLMakeRequest(const wchar_t *verb, const wchar_t *request_query, cons
 	printf(MAGENTA("- %s\n"), request_body);
 #endif
 
-	HINTERNET hRequest = WinHttpOpenRequest(g_current_user->hConnection, verb, request_query, L"HTTP/1.1", WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
+	HINTERNET hRequest = WinHttpOpenRequest(g_session_handles.hConnection, verb, request_query, L"HTTP/1.1", WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
 	if(hRequest == NULL) {
 		int error = GetLastError();
 		char buffer[512] = {};
@@ -6711,8 +6704,8 @@ HINTERNET TWLMakeRequest(const wchar_t *verb, const wchar_t *request_query, cons
 	wchar_t req_headers_buffer[4096] = {};
 	swprintf(req_headers_buffer, ARRAYSIZE(req_headers_buffer),
 			L"Authorization: Bearer %s\r\nClient-Id: %s\r\nContent-Type: application/json\r\n",
-			g_current_user->oauth2_token,
-			g_current_user->client_id);
+			g_current_user.oauth2_token,
+			g_current_user.client_id);
 
 	BOOL result = WinHttpSendRequest(hRequest, req_headers_buffer, (DWORD)-1L, (LPVOID)request_body, (DWORD)strlen(request_body), (DWORD)strlen(request_body), 0);
 	if(result == FALSE) {
