@@ -51,7 +51,10 @@ BOOL DllMain(HINSTANCE hInstDLL, DWORD reason, LPVOID reserved) {
 	return TRUE;
 }
 
-
+// #TODO What about split the connection and request handles from the user credentials
+// and so use only one handles and multiple user credentials?
+// I mean, at the end the client id and oauth token go in the request headers  and has
+// no use when we enstablish the connection to the endpoint.
 // ======================================== //
 //            TWITCH LIBRARY API            //
 // ======================================== //
