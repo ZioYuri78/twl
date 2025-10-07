@@ -21,7 +21,10 @@ FTWLUserCredentials api_creds_1 = {
 ```
 
 ### Step 2
-Connect to the Twitch API server with the 'TWLConnect()' function.
+Connect to the Twitch API server.
+```
+TWLConnect();
+```
 
 ### Step 3
 Set the current user, the first call to this function after the successfull
