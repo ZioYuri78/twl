@@ -70,7 +70,7 @@ An important concept of this library is that **almost every TWL function that ge
 as a parameter will allocate the memory for you**, in this case the call to TWLGetUsers
 will allocate the memory block and will assign it to the user_info_data pointer.
 
-This library also as few parsing functions like TWLPUserInfo, all the TWLP function
+This library also has few parsing functions like TWLPUserInfo, all the TWLP function
 receive the pointer allocated with the corresponding TWL function, fill a struct and
 **deallocate the memory for you**.
 
