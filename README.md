@@ -51,12 +51,12 @@ TWLConnect();
 ```
 
 ### Step 3
-Set the current user, the first call to this function after the successfull
-connection to the server is **mandatory**!!
+Set the current user (this is a very bad name, what we are talking about is the client_id and the oauth token), 
+the first call to this function after the successful connection to the server is **mandatory**!!
 
 `TWLSetCurrentUser(&api_creds_1);`
 
-From here every calls to the API will use the **api_creds_1** user_id and token.
+From here every calls to the API will use the **api_creds_1** client_id and oauth token.
 
 ### Step 4
 Call your API function, for example here we are going to get some twitch user information,
@@ -66,7 +66,7 @@ char *user_info_data = NULL;
 TWLGetUsers(NULL, "ZioYuri78", &user_info_data);
 ```
 
-An important concept of this library is that **almost every TWL function that get a buffer
+An important concept of this library is that **almost every TWL function that get a pointer
 as a parameter will allocate the memory for you**, in this case the call to TWLGetUsers
 will allocate the memory block and will assign it to the user_info_data pointer.
 
