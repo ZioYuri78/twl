@@ -14,9 +14,10 @@ go here https://dev.twitch.tv/docs/api/get-started/ and read the docs.
 Init the FTWLUserCredentials struct, you can have multiple of them,
 in my case i use more than one when i have more than one oauth tokens with different scopes.
 ```
-FTWLUserCredentials api_creds_1 = {};
-api_creds_1.user_id = L"sakjhdlkahjslkdjlakjdlkajslk";
-api_creds_1.oauth2_token = L"diuoasoi12093idjsaloijda";
+FTWLUserCredentials user = {
+	.client_id = L"sakjhdlkahjslkdjlakjdlkajslk",
+	.oauth2_token = L"diuoasoi12093idjsaloijda",
+};
 ```
 
 ### Step 2
