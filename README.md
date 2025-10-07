@@ -5,6 +5,30 @@ I started working on this library because i needed to read messages from a Twitc
 i wrote a complete library but, this code lack a lot of features and functionalities,
 everything work at the bare minimum, so **USE IT AT YOUR OWN RISK!!**
 
+## HOW TO BUILD THE LIBRARY
+It's simple, just run build_DLL_RELEASE.bat for the release version, or
+run build_DLL_DEBUG.bat for the debug version.
+
+```
+build_DLL_RELEASE.bat
+```
+
+## HOW TO BUILD THE EXAMPLES
+Even more simple, just run build_examples.bat for the release version, or
+run build_examples_debug.bat for the debug version.
+
+```
+build_examples.bat
+```
+
+These two batches will build the dll and all the examples.
+If you want to just build the single example run build_RELEASE.bat/build_DEBUG.bat 
+with the example file you want to build as an argument.
+
+```
+build_RELEASE.bat src\api_example.c
+```
+
 ## HOW TO USE
 
 ### Step 1
