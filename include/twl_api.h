@@ -1991,6 +1991,13 @@ extern "C" {
 	 *
 	 * @param event_sub				Pointer to the EventSub connection
 	 *
+	 * @param data					Pointer to the buffer where we want to store the data,
+	 * 								- if NULL the function will allocate the memory for you.
+	 * 								- if NOT NULL the function will NOT allocate the memory for you,
+	 * 								  but it will reallocate the memory if needed.
+	 * 								  (a good use case is call the function in a loop, so no need
+	 * 								   to free the memory at every loop iteration)
+	 *
 	 */
 	TWL_API BOOL TWLReadEventData(const FTWLEventSubSession *event_sub, char **data);
 

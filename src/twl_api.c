@@ -3158,13 +3158,34 @@ BOOL TWLGetEventSubSubscriptions(const char *status, const char *type, const cha
 
 BOOL TWLReadEventData(const FTWLEventSubSession *event_sub, char **data) {
 	DWORD ws_recv_read = 0;
-	DWORD ws_chunk_size = 2048;
 	DWORD ws_total_read = 0;
+	DWORD ws_chunk_size = 2048;
 	int32_t ws_buffer_size = 4096;
 	WINHTTP_WEB_SOCKET_BUFFER_TYPE ws_buffer_type = WINHTTP_WEB_SOCKET_UTF8_FRAGMENT_BUFFER_TYPE;
 
-	*data = (char*)malloc(ws_buffer_size);
-	memset(*data, '\0', ws_buffer_size);
+	if(*data == NULL) {
+
+#if TWL_DEBUG_EVENT_READ_DATA
+		printf(MAGENTA("==========================================================================\n"));
+		printf(CYAN("We are going to allocate 4096 bytes and set a chunck size of 2048 bytes.\n"));
+		printf(MAGENTA("==========================================================================\n"));
+#endif
+
+		*data = (char*)malloc(ws_buffer_size);
+		memset(*data, '\0', ws_buffer_size);
+	
+	} else {
+	
+		ws_buffer_size = _msize(*data);
+		ws_chunk_size = ws_buffer_size / 2;
+
+#if TWL_DEBUG_EVENT_READ_DATA
+		printf(MAGENTA("=========================================================================================\n"));
+		printf(CYAN("We have already allocated %i bytes so we are going to set a chunk size of %lu bytes.\n"), ws_buffer_size, ws_chunk_size);
+		printf(MAGENTA("=========================================================================================\n"));
+#endif
+	}
+
 	char *p = *data;
 
 	while(ws_buffer_type == WINHTTP_WEB_SOCKET_UTF8_FRAGMENT_BUFFER_TYPE) {
@@ -3183,6 +3204,7 @@ BOOL TWLReadEventData(const FTWLEventSubSession *event_sub, char **data) {
 		if(ws_buffer_type == WINHTTP_WEB_SOCKET_UTF8_FRAGMENT_BUFFER_TYPE && (ws_total_read + ws_chunk_size) > ws_buffer_size) {
 			
 			ws_buffer_size += 4096;
+			ws_chunk_size += 2048;
 			
 			char *tmp = (char*)realloc(*data, ws_buffer_size);
 			if(tmp == NULL) {
@@ -3193,6 +3215,7 @@ BOOL TWLReadEventData(const FTWLEventSubSession *event_sub, char **data) {
 
 #if TWL_DEBUG_EVENT_READ_DATA
 			printf(GREEN("Successfully reallocated TWLReadEventData internal buffer from %i to %i bytes!\n"), ws_buffer_size - 4096, ws_buffer_size);
+			printf(GREEN("Chunk size increased from %i to %i bytes!\n"), ws_chunk_size - 2048, ws_chunk_size);
 #endif
 			*data = tmp;
 			memset(*data + ws_total_read, '\0', ws_buffer_size - ws_total_read);

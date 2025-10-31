@@ -159,22 +159,51 @@ int main(int argc, char **argv) {
 
 	printf("\n");
 	
+	// Two ways to use TWLReadEventData:
+	// 1) Pass a NULL pointer and the function will allocate the memory for you.
+
 	// Listen to incoming EventSub notifications, press ESC to exit the loop
 	GetAsyncKeyState(VK_ESCAPE);	// Flush the key state.
 	do {
 		// This function sit and wait for the incoming websocket notifications,
-		// it allocate the memory, i know is not the best way tomanage this here
-		// but i keep it for now.
+		// it allocate the memory for you, starting from 4096 bytes.
 		char *data_buffer = NULL;
 		TWLReadEventData(&event_sub_session, &data_buffer);
 		
 		printf(COL_BF_MAGENTA "========== INCOMING MESSAGE (PRESS ESC TO EXIT) ==========\n");
 		printf(COL_BF_GREEN "%s\n\n", data_buffer);
 		
-		// Remember to manually free the memory!
+		// WARNING: Remember to manually free the memory at every loop iteration!
 		TWLFree(data_buffer);
 
-	} while((0x01 & GetAsyncKeyState(VK_ESCAPE)) == 0x00);
+	} while(0x01 & (GetAsyncKeyState(VK_ESCAPE) == 0x00));
+
+
+	// Two ways to use TWLReadEventData:
+	// 2) Pass a VALID pointer and the function will not allocate the memory for you,
+	//    but it will still reallocate the memory if needed.
+
+	// Allocate our memory
+	char *data_buffer = (char*)malloc(4096);
+
+	// Listen to incoming EventSub notifications, press ESC to exit the loop
+	GetAsyncKeyState(VK_ESCAPE);	// Flush the key state.
+	do {
+		
+		memset(data_buffer, 0x00, _msize(data_buffer));
+		
+		// This function sit and wait for the incoming websocket notifications, it
+		// does NOT allocate the memory for you but it can reallocate it if needed.
+		TWLReadEventData(&event_sub_session, &data_buffer);
+
+		printf(COL_BF_MAGENTA "========== INCOMING MESSAGE (PRESS ESC TO EXIT) ==========\n");
+		printf(COL_BF_GREEN "%s\n\n", data_buffer);
+	} while(0x01 & (GetAsyncKeyState(VK_ESCAPE) == 0x00));
+
+	// WARNING: remember to free your memory, 
+	// in this case we don't need to do it at every loop iteration.
+	free(data_buffer);
+
 
 	printf("\n");
 	
