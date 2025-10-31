@@ -176,7 +176,7 @@ int main(int argc, char **argv) {
 		// WARNING: Remember to manually free the memory at every loop iteration!
 		TWLFree(data_buffer);
 
-	} while(0x01 & (GetAsyncKeyState(VK_ESCAPE) == 0x00));
+	} while((0x01 & GetAsyncKeyState(VK_ESCAPE)) == 0x00);
 
 
 	// Two ways to use TWLReadEventData:
@@ -198,7 +198,7 @@ int main(int argc, char **argv) {
 
 		printf(COL_BF_MAGENTA "========== INCOMING MESSAGE (PRESS ESC TO EXIT) ==========\n");
 		printf(COL_BF_GREEN "%s\n\n", data_buffer);
-	} while(0x01 & (GetAsyncKeyState(VK_ESCAPE) == 0x00));
+	} while((0x01 & GetAsyncKeyState(VK_ESCAPE)) == 0x00);
 
 	// WARNING: remember to free your memory, 
 	// in this case we don't need to do it at every loop iteration.
