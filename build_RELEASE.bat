@@ -4,7 +4,7 @@ setlocal
 set WD=%~dp0
 
 if not exist "%WD%obj\" mkdir "%WD%obj\"
-if not exist "%WD%bin\" mkdir "%WD%bin\release\"
+if not exist "%WD%bin\release\" mkdir "%WD%bin\release\"
 
 set SOURCE=%1
 set LIBRARIES=%2

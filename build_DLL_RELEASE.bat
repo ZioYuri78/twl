@@ -4,8 +4,8 @@ setlocal enabledelayedexpansion
 set WD=%~dp0
 
 if not exist "%WD%obj\" mkdir "%WD%obj\"
-if not exist "%WD%lib\" mkdir "%WD%lib\release\"
-if not exist "%WD%bin\" mkdir "%WD%bin\release\"
+if not exist "%WD%lib\release\" mkdir "%WD%lib\release\"
+if not exist "%WD%bin\release\" mkdir "%WD%bin\release\"
 
 set INCLUDES=%WD%include\
 set STD=c11
